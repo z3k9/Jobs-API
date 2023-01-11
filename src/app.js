@@ -5,14 +5,16 @@ const v1 = require('./routes/v1');
 require('dotenv').config();
 
 app.use(express.json());
+app.get('/', (req,res)=>{
+    res.send('Jobs API');
+});
+
 app.use('/api/v1', v1);
 app.use(notFound);
 
 
-//routes
-app.get('/', (req,res)=>{
-    res.send('Jobs API');
-});
+
+
 
 
 module.exports = app;
