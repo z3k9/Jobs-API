@@ -1,0 +1,25 @@
+const User = require('../models/user.mongo');
+const jwt = require('jsonwebtoken');
+
+
+async function authenticationMiddleware(req,res,next){
+    const authHeader = req.headers.authorization;
+    if(!authHeader || !authHeader.startsWith("Bearer ")){
+        res.status(401).json({msg: 'Token not provided'});
+    }
+    const token = authHeader.split(' ')[1];
+
+    try{
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        // attach the user to the job routes
+        //req.user = { userId: payload.userId, name: payload.name};
+        const user = await User.findById(payload.userId).select('-password');
+        req.user = user;
+        next();
+    }
+    catch(err){
+        res.status(401).json({msg: 'no access to this route'});
+    }
+}
+
+module.exports = authenticationMiddleware;

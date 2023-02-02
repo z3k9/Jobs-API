@@ -1,3 +1,5 @@
+const Job = require('../../models/job.mongo');
+
 async function getAllJobs(req,res){
     res.send('All Jobs');
 }
@@ -7,7 +9,10 @@ async function getAJob(req,res){
 }
 
 async function createAJob(req,res){
-    res.send('Job created');
+    req.body.createdBy = req.user._id;
+    const job = await Job.create(req.body);
+    
+    res.status(200).json(job);
 }
 
 async function updateAJob(req,res){
