@@ -28,6 +28,7 @@ async function register(req,res){
         const user = await User.create({...req.body});
         const token = user.createJWT();
         res.status(201).json({ user: {name: user.name, email: user.email}, token});
+        console.log(user);
     }
     catch(error){
         res.status(500).json({ msg:error });
